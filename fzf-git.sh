@@ -106,7 +106,13 @@ elif [[ $# -gt 1 ]]; then
 
   case "$(uname -s)" in
     Darwin) open "$url$path"     ;;
-    *)      xdg-open "$url$path" ;;
+    *)
+      if [[ -e '/proc/sys/fs/binfmt_misc/WSLInterop' ]] && ! command -v 'xdg-open' > /dev/null 2>&1; then
+        explorer.exe "$url$path"
+      else
+        xdg-open "$url$path"
+      fi
+      ;;
   esac
   exit 0
 fi
